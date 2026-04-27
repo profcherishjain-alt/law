@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NyayAI — Indian Legal Assistant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --saffron: #FF9933;
+      --saffron-light: #FFF3E0;
+      --saffron-dark: #E65100;
+      --navy: #0D1B3E;
+      --navy-mid: #1A2F5E;
+      --navy-light: #E8EDF7;
+      --green-india: #138808;
+      --green-light: #E8F5E9;
+      --gold: #C49A00;
+      --gold-light: #FFF8DC;
+      --text: #1A1A2E;
+      --text-muted: #5A6070;
+      --border: rgba(13,27,62,0.12);
+      --white: #FFFFFF;
+      --surface: #FAFBFF;
+      --card: #FFFFFF;
+      --radius: 12px;
+      --shadow: 0 1px 3px rgba(13,27,62,0.08), 0 4px 16px rgba(13,27,62,0.06);
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--surface);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* NAV */
+    nav {
+      background: var(--navy);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 3px solid var(--saffron);
+    }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--white);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .nav-logo span { color: var(--saffron); }
+    .ashoka-wheel {
+      width: 28px; height: 28px;
+      background: radial-gradient(circle, #138808 0%, #0a5c05 100%);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+    }
+    .nav-links { display: flex; gap: 4px; }
+    .nav-link {
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      font-size: 0.85rem;
+      padding: 6px 14px;
+      border-radius: 6px;
+      transition: all 0.2s;
+      font-weight: 400;
+    }
+    .nav-link:hover, .nav-link.active {
+      color: var(--white);
+      background: rgba(255,153,51,0.2);
+    }
+    .nav-link.active { color: var(--saffron); }
+    .nav-badge {
+      background: var(--saffron);
+      color: var(--navy);
+      font-size: 10px;
+      font-weight: 500;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-left: 4px;
+    }
+
+    /* PAGES */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, #1e3a7a 100%);
+      padding: 5rem 2rem 4rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '⚖';
+      position: absolute;
+      font-size: 400px;
+      opacity: 0.03;
+      top: -80px; right: -60px;
+      color: var(--saffron);
+    }
+    .hero-tag {
+      display: inline-block;
+      background: rgba(255,153,51,0.15);
+      color: var(--saffron);
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,153,51,0.3);
+      margin-bottom: 1.5rem;
+    }
+    .hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 5vw, 3.8rem);
+      font-weight: 600;
+      color: var(--white);
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+    .hero h1 em { color: var(--saffron); font-style: italic; }
+    .hero p {
+      color: rgba(255,255,255,0.65);
+      font-size: 1.1rem;
+      max-width: 540px;
+      margin: 0 auto 2.5rem;
+      font-weight: 300;
+      line-height: 1.7;
+    }
+    .hero-cta {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      background: var(--saffron);
+      color: var(--navy);
+      border: none;
+      padding: 12px 28px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .btn-primary:hover { background: #e88820; transform: translateY(-1px); }
+    .btn-secondary {
+      background: transparent;
+      color: var(--white);
+      border: 1px solid rgba(255,255,255,0.3);
+      padding: 12px 28px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 400;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .btn-secondary:hover { border-color: var(--saffron); color: var(--saffron); }
+
+    /* FEATURES STRIP */
+    .features-strip {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 0;
+      overflow-x: auto;
+    }
+    .features-row {
+      display: flex;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .feature-item {
+      flex: 1;
+      min-width: 160px;
+      padding: 1.2rem 1.5rem;
+      text-align: center;
+      border-right: 1px solid var(--border);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .feature-item:last-child { border-right: none; }
+    .feature-item:hover { background: var(--saffron-light); }
+    .feature-item.active { background: var(--saffron-light); border-bottom: 2px solid var(--saffron); }
+    .feature-icon { font-size: 1.4rem; margin-bottom: 6px; }
+    .feature-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 400; }
+    .feature-title { font-size: 0.9rem; font-weight: 500; color: var(--text); }
+
+    /* MAIN CONTENT */
+    .main-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    /* TOOL PANELS */
+    .tool-panel { display: none; }
+    .tool-panel.active { display: block; }
+
+    /* CARD */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+    }
+    .card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 0.3rem;
+    }
+    .card-subtitle {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 1.2rem;
+    }
+
+    /* SEARCH BAR */
+    .search-wrap { position: relative; margin-bottom: 1rem; }
+    .search-input {
+      width: 100%;
+      padding: 12px 48px 12px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-family: 'DM Sans', sans-serif;
+      background: var(--white);
+      color: var(--text);
+      outline: none;
+      transition: border 0.2s;
+    }
+    .search-input:focus { border-color: var(--saffron); }
+    .search-btn {
+      position: absolute;
+      right: 8px; top: 50%;
+      transform: translateY(-50%);
+      background: var(--saffron);
+      border: none;
+      border-radius: 6px;
+      padding: 6px 14px;
+      color: var(--navy);
+      font-weight: 500;
+      font-size: 0.8rem;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    /* QUICK TAGS */
+    .quick-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1.5rem; }
+    .tag {
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: var(--white);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .tag:hover { border-color: var(--saffron); color: var(--saffron); background: var(--saffron-light); }
+
+    /* RESULTS */
+    .result-item {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 10px;
+      background: var(--white);
+      transition: all 0.2s;
+    }
+    .result-item:hover { border-color: var(--saffron); box-shadow: 0 2px 8px rgba(255,153,51,0.1); }
+    .result-section { font-size: 0.7rem; color: var(--saffron-dark); font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; }
+    .result-title { font-size: 1rem; font-weight: 500; color: var(--navy); margin: 3px 0; }
+    .result-text { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; }
+    .result-tags { display: flex; gap: 5px; margin-top: 8px; flex-wrap: wrap; }
+    .result-tag {
+      font-size: 0.7rem;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: var(--navy-light);
+      color: var(--navy);
+    }
+    .result-tag.bailable { background: var(--green-light); color: var(--green-india); }
+    .result-tag.non-bailable { background: #FFEBEE; color: #C62828; }
+    .result-tag.cognizable { background: #FFF3E0; color: #E65100; }
+
+    /* AI RESPONSE */
+    .ai-response {
+      background: linear-gradient(135deg, var(--navy-light) 0%, #EEF2FF 100%);
+      border: 1px solid rgba(13,27,62,0.15);
+      border-left: 3px solid var(--saffron);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+    }
+    .ai-label {
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: var(--saffron-dark);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .ai-label::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--saffron);
+      display: inline-block;
+    }
+    .ai-text { font-size: 0.9rem; line-height: 1.7; color: var(--text); }
+
+    /* DRAFT TOOL */
+    .draft-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    @media(max-width: 700px) { .draft-grid { grid-template-columns: 1fr; } }
+
+    .form-group { margin-bottom: 1rem; }
+    .form-label { font-size: 0.8rem; font-weight: 500; color: var(--text-muted); margin-bottom: 5px; display: block; }
+    .form-input, .form-select, .form-textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-family: 'DM Sans', sans-serif;
+      background: var(--white);
+      color: var(--text);
+      outline: none;
+      transition: border 0.2s;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--saffron); }
+    .form-textarea { min-height: 100px; resize: vertical; }
+
+    /* QUIZ */
+    .quiz-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+    .quiz-q {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--navy);
+      margin-bottom: 1.2rem;
+      line-height: 1.5;
+    }
+    .quiz-options { display: flex; flex-direction: column; gap: 8px; }
+    .quiz-opt {
+      padding: 10px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      color: var(--text);
+      background: var(--white);
+      text-align: left;
+      transition: all 0.2s;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .quiz-opt:hover { border-color: var(--saffron); background: var(--saffron-light); }
+    .quiz-opt.correct { border-color: var(--green-india); background: var(--green-light); color: var(--green-india); }
+    .quiz-opt.wrong { border-color: #C62828; background: #FFEBEE; color: #C62828; }
+    .quiz-explanation {
+      margin-top: 1rem;
+      padding: 12px 16px;
+      background: var(--gold-light);
+      border-left: 3px solid var(--gold);
+      border-radius: 6px;
+      font-size: 0.85rem;
+      color: var(--text);
+      line-height: 1.6;
+      display: none;
+    }
+    .quiz-score {
+      text-align: center;
+      padding: 2rem;
+      font-family: 'Cormorant Garamond', serif;
+    }
+    .quiz-score-num { font-size: 4rem; font-weight: 600; color: var(--saffron); }
+    .quiz-score-label { font-size: 1.2rem; color: var(--text-muted); }
+
+    /* GLOSSARY */
+    .glossary-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
+    .gloss-item {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      transition: all 0.2s;
+    }
+    .gloss-item:hover { border-color: var(--saffron); }
+    .gloss-term { font-weight: 500; color: var(--navy); font-size: 0.95rem; }
+    .gloss-latin { font-style: italic; font-size: 0.8rem; color: var(--saffron-dark); margin: 2px 0; font-family: 'Cormorant Garamond', serif; }
+    .gloss-def { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; margin-top: 4px; }
+
+    /* LOADING */
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+    .spinner {
+      width: 28px; height: 28px;
+      border: 2px solid var(--border);
+      border-top-color: var(--saffron);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 10px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* DISCLAIMER */
+    .disclaimer {
+      background: #FFF8E1;
+      border: 1px solid #FFD54F;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 0.78rem;
+      color: #795548;
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+    .disclaimer strong { color: #5D4037; }
+
+    /* FOOTER */
+    footer {
+      background: var(--navy);
+      color: rgba(255,255,255,0.5);
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.8rem;
+      margin-top: 4rem;
+    }
+    footer strong { color: var(--saffron); }
+
+    /* RESPONSIVE */
+    @media(max-width: 600px) {
+      nav { padding: 0 1rem; }
+      .nav-links { display: none; }
+      .main-container { padding: 1rem; }
+      .hero { padding: 3rem 1rem 2.5rem; }
+    }
+
+    /* Tabs */
+    .tab-row { display: flex; gap: 4px; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .tab-btn {
+      padding: 7px 16px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-family: 'DM Sans', sans-serif;
+      background: var(--white);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .tab-btn.active, .tab-btn:hover { background: var(--saffron); color: var(--navy); border-color: var(--saffron); }
+
+    /* Statute Reference */
+    .statute-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+    .statute-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    .statute-card:hover { border-color: var(--saffron); box-shadow: 0 2px 10px rgba(255,153,51,0.12); transform: translateY(-2px); }
+    .statute-icon { font-size: 1.5rem; margin-bottom: 6px; }
+    .statute-name { font-size: 0.9rem; font-weight: 500; color: var(--navy); }
+    .statute-full { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+    .statute-year { font-size: 0.7rem; color: var(--saffron-dark); font-weight: 500; margin-top: 4px; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    @media(max-width:700px){ .two-col { grid-template-columns: 1fr; } }
+
+    .output-area {
+      background: var(--navy-light);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      font-size: 0.88rem;
+      line-height: 1.8;
+      color: var(--text);
+      white-space: pre-wrap;
+      min-height: 200px;
+    }
+
+    /* Chat UI */
+    .chat-messages {
+      height: 420px;
+      overflow-y: auto;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .chat-msg {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+    .chat-msg.user { flex-direction: row-reverse; }
+    .chat-avatar {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: var(--navy);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px;
+      color: var(--white);
+      flex-shrink: 0;
+    }
+    .chat-msg.user .chat-avatar { background: var(--saffron); color: var(--navy); }
+    .chat-bubble {
+      max-width: 75%;
+      padding: 9px 14px;
+      border-radius: 12px;
+      font-size: 0.875rem;
+      line-height: 1.6;
+      background: var(--white);
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+    .chat-msg.user .chat-bubble {
+      background: var(--navy);
+      color: var(--white);
+      border: none;
+    }
+    .chat-input-row {
+      display: flex;
+      gap: 8px;
+    }
+    .chat-input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-family: 'DM Sans', sans-serif;
+      outline: none;
+    }
+    .chat-input:focus { border-color: var(--saffron); }
+    .chat-send {
+      background: var(--saffron);
+      border: none;
+      border-radius: 8px;
+      padding: 10px 18px;
+      color: var(--navy);
+      font-weight: 500;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    /* Progress bar */
+    .progress-bar { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; margin-bottom: 1rem; }
+    .progress-fill { height: 100%; background: var(--saffron); border-radius: 2px; transition: width 0.3s; }
+
+    /* Back btn */
+    .back-btn {
+      background: none; border: none;
+      color: var(--saffron-dark); cursor: pointer;
+      font-size: 0.85rem; font-family: 'DM Sans', sans-serif;
+      padding: 0; margin-bottom: 1rem;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .back-btn:hover { color: var(--saffron); }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#" onclick="showPage('home')">
+    <div class="ashoka-wheel">⚖</div>
+    Nyay<span>AI</span>
+  </a>
+  <div class="nav-links">
+    <a class="nav-link active" href="#" onclick="showPage('home')">Home</a>
+    <a class="nav-link" href="#" onclick="showPage('tools'); setTool('ipc')">IPC Search</a>
+    <a class="nav-link" href="#" onclick="showPage('tools'); setTool('draft')">Draft</a>
+    <a class="nav-link" href="#" onclick="showPage('tools'); setTool('quiz')">Practice <span class="nav-badge">MCQ</span></a>
+    <a class="nav-link" href="#" onclick="showPage('tools'); setTool('glossary')">Glossary</a>
+    <a class="nav-link" href="#" onclick="showPage('tools'); setTool('chat')">AI Chat</a>
+  </div>
+</nav>
+
+<!-- HOME PAGE -->
+<div id="page-home" class="page active">
+  <div class="hero">
+    <div class="hero-tag">🇮🇳 Indian Law • AI-Powered • Free</div>
+    <h1>Your <em>Legal Companion</em><br/>for Indian Law</h1>
+    <p>IPC sections, legal drafting, case law references, MCQ practice & AI legal chat — all in one place for students & lawyers.</p>
+    <div class="hero-cta">
+      <button class="btn-primary" onclick="showPage('tools'); setTool('ipc')">🔍 Search IPC Sections</button>
+      <button class="btn-secondary" onclick="showPage('tools'); setTool('chat')">💬 Ask AI Lawyer</button>
+    </div>
+  </div>
+
+  <div class="features-strip">
+    <div class="features-row">
+      <div class="feature-item" onclick="showPage('tools'); setTool('ipc')">
+        <div class="feature-icon">📖</div>
+        <div class="feature-title">IPC / BNS Search</div>
+        <div class="feature-label">All sections with details</div>
+      </div>
+      <div class="feature-item" onclick="showPage('tools'); setTool('draft')">
+        <div class="feature-icon">📝</div>
+        <div class="feature-title">Legal Drafting</div>
+        <div class="feature-label">FIR, Bail, Affidavit</div>
+      </div>
+      <div class="feature-item" onclick="showPage('tools'); setTool('chat')">
+        <div class="feature-icon">🤖</div>
+        <div class="feature-title">AI Legal Chat</div>
+        <div class="feature-label">Ask any legal question</div>
+      </div>
+      <div class="feature-item" onclick="showPage('tools'); setTool('quiz')">
+        <div class="feature-icon">📋</div>
+        <div class="feature-title">MCQ Practice</div>
+        <div class="feature-label">CLAT, Judiciary prep</div>
+      </div>
+      <div class="feature-item" onclick="showPage('tools'); setTool('glossary')">
+        <div class="feature-icon">📚</div>
+        <div class="feature-title">Legal Glossary</div>
+        <div class="feature-label">Latin terms & more</div>
+      </div>
+      <div class="feature-item" onclick="showPage('tools'); setTool('statutes')">
+        <div class="feature-icon">🏛</div>
+        <div class="feature-title">Key Statutes</div>
+        <div class="feature-label">Acts reference</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-container" style="padding-top: 3rem;">
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title">⚡ Quick Lookup</div>
+        <div class="card-subtitle">Search any IPC/BNS section instantly</div>
+        <div class="search-wrap">
+          <input class="search-input" id="home-search" placeholder="e.g. murder, theft, 302, bail..." onkeydown="if(event.key==='Enter'){quickSearch()}" />
+          <button class="search-btn" onclick="quickSearch()">Search</button>
+        </div>
+        <div class="quick-tags">
+          <span class="tag" onclick="homeTag('IPC 302')">IPC 302</span>
+          <span class="tag" onclick="homeTag('IPC 420')">IPC 420</span>
+          <span class="tag" onclick="homeTag('IPC 376')">IPC 376</span>
+          <span class="tag" onclick="homeTag('IPC 498A')">IPC 498A</span>
+          <span class="tag" onclick="homeTag('bail')">Bail</span>
+          <span class="tag" onclick="homeTag('anticipatory bail')">Anticipatory Bail</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">📊 Exam Readiness</div>
+        <div class="card-subtitle">Track your MCQ practice progress</div>
+        <div style="margin-bottom: 10px;">
+          <div style="display:flex; justify-content:space-between; font-size:0.8rem; color:var(--text-muted); margin-bottom:4px;">
+            <span>Questions attempted</span><span id="stat-attempted">0</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" id="progress-attempted" style="width:0%"></div></div>
+        </div>
+        <div style="margin-bottom: 10px;">
+          <div style="display:flex; justify-content:space-between; font-size:0.8rem; color:var(--text-muted); margin-bottom:4px;">
+            <span>Accuracy</span><span id="stat-accuracy">—</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" id="progress-accuracy" style="width:0%; background:var(--green-india)"></div></div>
+        </div>
+        <button class="btn-primary" style="width:100%; margin-top:8px" onclick="showPage('tools'); setTool('quiz')">Start Practice →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOOLS PAGE -->
+<div id="page-tools" class="page">
+  <div class="features-strip">
+    <div class="features-row">
+      <div class="feature-item" id="tab-ipc" onclick="setTool('ipc')">
+        <div class="feature-icon">📖</div>
+        <div class="feature-title">IPC / BNS</div>
+        <div class="feature-label">Section search</div>
+      </div>
+      <div class="feature-item" id="tab-draft" onclick="setTool('draft')">
+        <div class="feature-icon">📝</div>
+        <div class="feature-title">Draft</div>
+        <div class="feature-label">Legal documents</div>
+      </div>
+      <div class="feature-item" id="tab-chat" onclick="setTool('chat')">
+        <div class="feature-icon">🤖</div>
+        <div class="feature-title">AI Chat</div>
+        <div class="feature-label">Legal questions</div>
+      </div>
+      <div class="feature-item" id="tab-quiz" onclick="setTool('quiz')">
+        <div class="feature-icon">📋</div>
+        <div class="feature-title">MCQ Quiz</div>
+        <div class="feature-label">Exam prep</div>
+      </div>
+      <div class="feature-item" id="tab-glossary" onclick="setTool('glossary')">
+        <div class="feature-icon">📚</div>
+        <div class="feature-title">Glossary</div>
+        <div class="feature-label">Legal terms</div>
+      </div>
+      <div class="feature-item" id="tab-statutes" onclick="setTool('statutes')">
+        <div class="feature-icon">🏛</div>
+        <div class="feature-title">Statutes</div>
+        <div class="feature-label">Key Acts</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-container">
+
+    <!-- IPC SEARCH TOOL -->
+    <div id="tool-ipc" class="tool-panel active">
+      <div class="disclaimer">
+        <strong>⚠ Disclaimer:</strong> This tool is for educational purposes only. Always consult a qualified advocate for legal advice. Laws may be amended — verify with official sources.
+      </div>
+      <div class="card">
+        <div class="card-title">📖 IPC / BNS Section Search</div>
+        <div class="card-subtitle">Search Indian Penal Code and Bharatiya Nyaya Sanhita sections by keyword or number</div>
+        <div class="tab-row">
+          <button class="tab-btn active" onclick="setIPCTab('ipc',this)">IPC 1860</button>
+          <button class="tab-btn" onclick="setIPCTab('bns',this)">BNS 2023</button>
+          <button class="tab-btn" onclick="setIPCTab('crpc',this)">CrPC / BNSS</button>
+          <button class="tab-btn" onclick="setIPCTab('cpc',this)">CPC 1908</button>
+          <button class="tab-btn" onclick="setIPCTab('evidence',this)">Evidence Act</button>
+        </div>
+        <div class="search-wrap">
+          <input class="search-input" id="ipc-search" placeholder="Search by section number, keyword (e.g. 'murder', '302', 'theft', 'bail')..." onkeydown="if(event.key==='Enter'){searchIPC()}" />
+          <button class="search-btn" onclick="searchIPC()">Search</button>
+        </div>
+        <div class="quick-tags" id="ipc-quick-tags">
+          <span class="tag" onclick="ipcTag('murder')">Murder (302)</span>
+          <span class="tag" onclick="ipcTag('theft')">Theft (378)</span>
+          <span class="tag" onclick="ipcTag('cheating')">Cheating (420)</span>
+          <span class="tag" onclick="ipcTag('rape')">Rape (376)</span>
+          <span class="tag" onclick="ipcTag('dowry')">Dowry (498A)</span>
+          <span class="tag" onclick="ipcTag('kidnapping')">Kidnapping (363)</span>
+          <span class="tag" onclick="ipcTag('riot')">Riot (147)</span>
+          <span class="tag" onclick="ipcTag('defamation')">Defamation (499)</span>
+        </div>
+        <div id="ipc-results"></div>
+      </div>
+    </div>
+
+    <!-- DRAFT TOOL -->
+    <div id="tool-draft" class="tool-panel">
+      <div class="disclaimer">
+        <strong>⚠ Disclaimer:</strong> AI-generated drafts are templates only. Have them reviewed by a qualified advocate before use in any legal proceeding.
+      </div>
+      <div class="two-col">
+        <div class="card">
+          <div class="card-title">📝 Document Drafter</div>
+          <div class="card-subtitle">AI-powered legal document templates</div>
+          <div class="form-group">
+            <label class="form-label">Document Type</label>
+            <select class="form-select" id="doc-type">
+              <option value="fir">FIR (First Information Report)</option>
+              <option value="bail">Bail Application</option>
+              <option value="anticipatory">Anticipatory Bail Application</option>
+              <option value="affidavit">General Affidavit</option>
+              <option value="legal-notice">Legal Notice</option>
+              <option value="vakalatnama">Vakalatnama</option>
+              <option value="complaint">Consumer Complaint</option>
+              <option value="rent">Rent Agreement</option>
+              <option value="writ">Writ Petition (Brief)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Court / Forum</label>
+            <select class="form-select" id="doc-court">
+              <option value="sessions">Sessions Court</option>
+              <option value="hc">High Court</option>
+              <option value="sc">Supreme Court of India</option>
+              <option value="magistrate">Magistrate Court</option>
+              <option value="consumer">Consumer Forum</option>
+              <option value="civil">Civil Court</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Petitioner / Applicant Name</label>
+            <input class="form-input" id="petitioner-name" placeholder="Full name of applicant" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Relevant IPC/BNS Section (if criminal)</label>
+            <input class="form-input" id="doc-section" placeholder="e.g. IPC 302, 307, 376..." />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Brief Facts</label>
+            <textarea class="form-textarea" id="doc-facts" placeholder="Describe the key facts of the case..."></textarea>
+          </div>
+          <button class="btn-primary" style="width:100%" onclick="generateDraft()">Generate Draft →</button>
+        </div>
+        <div class="card">
+          <div class="card-title">📄 Generated Draft</div>
+          <div class="card-subtitle">Review and copy — not for direct filing</div>
+          <div id="draft-output" class="output-area" style="font-family: 'Cormorant Garamond', serif; font-size:0.92rem;">Fill the form and click Generate Draft...</div>
+          <div style="display:flex; gap:8px; margin-top:10px;">
+            <button class="btn-primary" onclick="copyDraft()">📋 Copy Draft</button>
+            <button class="btn-secondary" onclick="clearDraft()">Clear</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI CHAT TOOL -->
+    <div id="tool-chat" class="tool-panel">
+      <div class="disclaimer">
+        <strong>⚠ Disclaimer:</strong> AI responses are for informational purposes only. This is NOT legal advice. Consult a qualified lawyer for your specific situation.
+      </div>
+      <div class="card">
+        <div class="card-title">🤖 AI Legal Assistant</div>
+        <div class="card-subtitle">Ask questions about Indian law — IPC, CrPC, constitutional law, civil law, family law</div>
+        <div class="chat-messages" id="chat-messages">
+          <div class="chat-msg">
+            <div class="chat-avatar">⚖</div>
+            <div class="chat-bubble">Namaste! I'm your AI Legal Assistant for Indian Law. I can help you with IPC sections, constitutional provisions, legal procedures, case law, and more. What legal question can I help you with today?</div>
+          </div>
+        </div>
+        <div class="quick-tags" style="margin-bottom:8px">
+          <span class="tag" onclick="quickChat('What is the difference between bailable and non-bailable offences?')">Bailable vs Non-bailable</span>
+          <span class="tag" onclick="quickChat('Explain Section 498A IPC and its misuse concern')">Section 498A IPC</span>
+          <span class="tag" onclick="quickChat('What are Fundamental Rights under Indian Constitution?')">Fundamental Rights</span>
+          <span class="tag" onclick="quickChat('How to file a PIL in High Court?')">Filing PIL</span>
+        </div>
+        <div class="chat-input-row">
+          <input class="chat-input" id="chat-input" placeholder="Ask a legal question..." onkeydown="if(event.key==='Enter'){sendChat()}" />
+          <button class="chat-send" onclick="sendChat()">Send →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUIZ TOOL -->
+    <div id="tool-quiz" class="tool-panel">
+      <div class="card">
+        <div class="card-title">📋 MCQ Practice — Judiciary & CLAT Prep</div>
+        <div class="card-subtitle">Test your knowledge of Indian law</div>
+        <div class="tab-row" id="quiz-topic-row">
+          <button class="tab-btn active" onclick="loadQuiz('ipc',this)">IPC / BNS</button>
+          <button class="tab-btn" onclick="loadQuiz('constitution',this)">Constitution</button>
+          <button class="tab-btn" onclick="loadQuiz('crpc',this)">CrPC / BNSS</button>
+          <button class="tab-btn" onclick="loadQuiz('landmark',this)">Landmark Cases</button>
+          <button class="tab-btn" onclick="loadQuiz('misc',this)">General Law</button>
+        </div>
+        <div id="quiz-container"></div>
+      </div>
+    </div>
+
+    <!-- GLOSSARY TOOL -->
+    <div id="tool-glossary" class="tool-panel">
+      <div class="card">
+        <div class="card-title">📚 Legal Glossary</div>
+        <div class="card-subtitle">Latin maxims, legal terms, and Indian law vocabulary</div>
+        <div class="search-wrap" style="margin-bottom:1rem">
+          <input class="search-input" id="gloss-search" placeholder="Search terms..." oninput="searchGlossary()" />
+        </div>
+        <div class="tab-row">
+          <button class="tab-btn active" onclick="filterGloss('all',this)">All</button>
+          <button class="tab-btn" onclick="filterGloss('latin',this)">Latin Maxims</button>
+          <button class="tab-btn" onclick="filterGloss('criminal',this)">Criminal Law</button>
+          <button class="tab-btn" onclick="filterGloss('civil',this)">Civil Law</button>
+          <button class="tab-btn" onclick="filterGloss('constitutional',this)">Constitutional</button>
+        </div>
+        <div id="glossary-grid" class="glossary-grid"></div>
+      </div>
+    </div>
+
+    <!-- STATUTES TOOL -->
+    <div id="tool-statutes" class="tool-panel">
+      <div class="card">
+        <div class="card-title">🏛 Key Indian Statutes</div>
+        <div class="card-subtitle">Quick reference to major Acts — click to explore on IndiaCode</div>
+        <div id="statutes-grid" class="statute-grid"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <strong>NyayAI</strong> — Indian Legal Assistant &nbsp;|&nbsp;
+  For educational purposes only. Not a substitute for professional legal advice. &nbsp;|&nbsp;
+  Built for Indian law students & advocates &nbsp;|&nbsp;
+  <a href="https://github.com/" style="color:var(--saffron); text-decoration:none">GitHub</a>
+</footer>
+
+<script>
+// ── Page Navigation ──────────────────────────────
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+}
+
+function setTool(id) {
+  showPage('tools');
+  document.querySelectorAll('.tool-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('tool-' + id).classList.add('active');
+  document.querySelectorAll('#page-tools .feature-item').forEach(t => t.classList.remove('active'));
+  const tab = document.getElementById('tab-' + id);
+  if (tab) tab.classList.add('active');
+  if (id === 'quiz') loadQuiz('ipc', document.querySelector('#quiz-topic-row .tab-btn'));
+  if (id === 'glossary') renderGlossary('all');
+  if (id === 'statutes') renderStatutes();
+}
+
+// ── IPC DATA ─────────────────────────────────────
+const IPC_DATA = [
+  { sec:"IPC 96-106", title:"Right of Private Defence", category:"General Exceptions", bailable:"Varies", cognizable:"N/A", punishment:"Defence provisions", tags:["defence","private defence"], text:"Right to defend body and property against aggression when State protection unavailable." },
+  { sec:"IPC 141-158", title:"Unlawful Assembly & Riot", category:"Offences Against Public Tranquility", bailable:"Non-bailable", cognizable:"Cognizable", punishment:"2-7 years + fine", tags:["riot","assembly","147","148"], text:"Five or more persons with common intent to commit an offence. Rioting (Sec 147) — using force/violence by unlawful assembly." },
+  { sec:"IPC 302", title:"Punishment for Murder", category:"Offences Against Human Body", bailable:"Non-bailable", cognizable:"Cognizable", punishment:"Death or Imprisonment for Life + Fine", tags:["murder","death","homicide","302"], text:"Whoever commits murder shall be punished with death, or imprisonment for life, and shall also be liable to fine." },
+  { sec:"IPC 304", title:"Culpable Homicide not amounting to Murder", category:"Offences Against Human Body", bailable:"Non-bailable", cognizable:"Cognizable", punishment:"10 years / Life + Fine", tags:["culpable homicide","304"], text:"Whoever commits culpable homicide not amounting to murder. Punishment varies depending on intent." },
+  { sec:"IPC 307", title:"Attempt to Murder", category:"Offences Against Human Body", bailable:"Non-bailable", cognizable:"Cognizable", punishment:"10 years / Life (if hurt caused)", tags:["attempt murder","307"], text:"Whoever does any act with intention or knowledge to cause death — attempt to commit murder." },
+  { sec:"IPC 323", title:"Voluntarily Causing Hurt", category:"Offences Against Human Body", bailable:"Bailable", cognizable:"Non-cognizable", punishment:"1 year / Rs. 1000 Fine / Both", tags:["hurt","assault","323"], text:"Whoever voluntarily causes hurt shall be punished with imprisonment up to one year or fine." },
+  { sec:"IPC 354", title:"Assault to outrage modesty of woman", category:"Offences Against Women", bailable:"Non-bailable", cognizable:"Cognizable", punishment:"1-5 years + Fine", tags:["modesty","woman","assault","354"], text:"Whoever assaults or uses criminal force to any woman intending to outrage or knowing it likely to outrage her modesty." },
+  { sec:"IPC 376", title:"Rape", category:"Offences Against Women", bailable:"Non-bailable", cognizable:"Cognizable", punishment:"Minimum 7 years / Life", tags:["rape","sexual assault","376"], text:"Punishment for rape — rigorous imprisonment not less than 7 years extendable to life + fine. Aggravated forms attract higher punishment." },
+  { sec:"IPC 378-382", title:"Theft and its variants", category:"Offences Against Property", bailable:"Bailable", cognizable:"Cognizable", punishment:"3 years / Fine / Both", tags:["theft","stealing","378","379"], text:"Sec 378 defines theft. Sec 379 is punishment (3 yrs). Sec 380 theft in dwelling (7 yrs). Sec 381 by clerk/servant." },
+  { sec:"IPC 383-389", title:"Extortion", category:"Offences Against Property", bailable:"Non-bailable", cognizable:"Cognizable", punishment:"3-14 years depending on gravity", tags:["extortion","383","384"], text:"Putting person in fear of injury to dishonestly induce delivery of property. Sec 384 punishment for extortion — 3 years." },
+  { sec:"IPC 390-402", title:"Robbery and Dacoity", category:"Offences Against Property", bailable:"Non-bailable", cognizable:"Cognizable", punishment:"10 years / Life / Death", tags:["robbery","dacoity","dakaiti","390","395"], text:"Robbery = theft/extortion with force. Dacoity = robbery by 5+ persons. Punishment ranges from 10 years to death." },
+  { sec:"IPC 405-409", title:"Criminal Breach of Trust", category:"Offences Against Property", bailable:"Non-bailable", cognizable:"Cognizable", punishment:"3-10 years + Fine", tags:["breach of trust","criminal breach","405","406"], text:"Dishonest misappropriation or conversion of property entrusted. Sec 406 — 3 years. Sec 409 by public servant — 10 years." },
+  { sec:"IPC 415-420", title:"Cheating", category:"Offences Against Property", bailable:"Bailable (415), Non-bailable (420)", cognizable:"Non-cognizable (415), Cognizable (420)", punishment:"1 year (415) / 7 years (420) + Fine", tags:["cheating","fraud","420","415"], text:"Sec 415 defines cheating — deceiving a person. Sec 420 cheating by dishonest inducement to deliver property — 7 years." },
+  { sec:"IPC 441-462", title:"Criminal Trespass & House Breaking", category:"Offences Against Property", bailable:"Bailable/Non-bailable varies", cognizable:"Cognizable", punishment:"3-10 years + Fine", tags:["trespass","housebreaking","441","454"], text:"Criminal trespass (441) — unlawful entry into property. House breaking (445/454) with intent to commit offence." },
+  { sec:"IPC 463-471", title:"Forgery", category:"Offences of Forgery", bailable:"Non-bailable", cognizable:"Cognizable", punishment:"2-10 years + Fine", tags:["forgery","forged document","463","465"], text:"Making false document or electronic record with fraudulent/dishonest intent. Sec 465 — 2 years." },
+  { sec:"IPC 489A-489E", title:"Counterfeiting Currency Notes", category:"Offences Against Currency", bailable:"Non-bailable", cognizable:"Cognizable", punishment:"Life Imprisonment", tags:["counterfeit","currency","fake notes","489"], text:"Counterfeiting or using counterfeit currency notes or bank notes. Punishable with life imprisonment." },
+  { sec:"IPC 498A", title:"Husband/relatives cruelty to wife", category:"Offences Against Women", bailable:"Non-bailable", cognizable:"Cognizable", punishment:"3 years + Fine", tags:["498a","dowry cruelty","domestic violence","husband","wife"], text:"Whoever subjects a woman to cruelty (harassment for dowry or causing grave injury). Three years imprisonment + fine." },
+  { sec:"IPC 503-509", title:"Criminal Intimidation and Insult", category:"Offences Against Person", bailable:"Bailable", cognizable:"Non-cognizable", punishment:"2 years / Fine", tags:["intimidation","threat","503","506"], text:"Criminal intimidation (503/506) — threatening injury to person/property/reputation. Sec 509 — word/gesture insulting woman's modesty." },
+  { sec:"IPC 499-502", title:"Defamation", category:"Offences Against Reputation", bailable:"Bailable", cognizable:"Non-cognizable", punishment:"2 years / Fine / Both", tags:["defamation","libel","slander","499","500"], text:"Sec 499 defines defamation — imputation to harm reputation. Sec 500 — punishment 2 years simple imprisonment." },
+  { sec:"IPC 363-374", title:"Kidnapping and Abduction", category:"Offences Against Human Body", bailable:"Non-bailable", cognizable:"Cognizable", punishment:"7 years + Fine / Life", tags:["kidnapping","abduction","363","364"], text:"Sec 363 Kidnapping — 7 years. Sec 364 kidnapping for ransom — Life. Sec 366 kidnapping for marriage — 10 years." },
+  { sec:"IPC 300", title:"Murder — Definition", category:"Offences Against Human Body", bailable:"N/A (Definition)", cognizable:"N/A", punishment:"Refer Section 302", tags:["murder","definition","300"], text:"Culpable homicide amounts to murder when done with intention of causing death, or with knowledge death will likely result, etc. Four exceptions exist." },
+  { sec:"IPC 34", title:"Acts done by several persons in furtherance of common intention", category:"General Explanations", bailable:"N/A", cognizable:"N/A", punishment:"Same as principal offence", tags:["common intention","joint liability","34"], text:"When a criminal act is done by several persons in furtherance of the common intention of all, each person is liable as if done alone." },
+  { sec:"IPC 120A-120B", title:"Criminal Conspiracy", category:"Offences Against State", bailable:"Non-bailable", cognizable:"Cognizable", punishment:"6 months / Fine / Both or same as offence", tags:["conspiracy","criminal conspiracy","120b"], text:"When two or more persons agree to do an illegal act or to do a legal act by illegal means. Serious conspiracies — same as offence." },
+  { sec:"IPC 124A", title:"Sedition", category:"Offences Against State", bailable:"Non-bailable", cognizable:"Cognizable", punishment:"Life / 3 years + Fine", tags:["sedition","124a","anti-national"], text:"Whoever excites disaffection towards the Government. Note: SC stayed application in 2022; under review. BNS does not contain sedition." },
+];
+
+let currentIPCTab = 'ipc';
+function setIPCTab(tab, btn) {
+  currentIPCTab = tab;
+  document.querySelectorAll('#tool-ipc .tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('ipc-results').innerHTML = '';
+}
+
+function ipcTag(q) { document.getElementById('ipc-search').value = q; searchIPC(); }
+
+function searchIPC() {
+  const q = document.getElementById('ipc-search').value.trim().toLowerCase();
+  const container = document.getElementById('ipc-results');
+  if (!q) { container.innerHTML = ''; return; }
+  const results = IPC_DATA.filter(d =>
+    d.sec.toLowerCase().includes(q) ||
+    d.title.toLowerCase().includes(q) ||
+    d.text.toLowerCase().includes(q) ||
+    d.tags.some(t => t.includes(q))
+  );
+  if (!results.length) {
+    container.innerHTML = `<div class="loading">No sections found for "<strong>${q}</strong>". Try different keywords.</div>`;
+    callAIForIPC(q, container);
+    return;
+  }
+  const html = results.map(r => `
+    <div class="result-item">
+      <div class="result-section">${r.category}</div>
+      <div class="result-title">${r.sec} — ${r.title}</div>
+      <div class="result-text">${r.text}</div>
+      <div class="result-tags">
+        <span class="result-tag ${r.bailable.toLowerCase().includes('non') ? 'non-bailable' : 'bailable'}">${r.bailable}</span>
+        <span class="result-tag cognizable">${r.cognizable}</span>
+        <span class="result-tag">⚖ ${r.punishment}</span>
+      </div>
+    </div>
+  `).join('');
+  container.innerHTML = html;
+  callAIForIPC(q, container, true);
+}
+
+async function callAIForIPC(q, container, hasLocal) {
+  const aiDiv = document.createElement('div');
+  aiDiv.className = 'ai-response';
+  aiDiv.innerHTML = `<div class="ai-label">AI Analysis</div><div class="spinner"></div>`;
+  container.appendChild(aiDiv);
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: `You are an expert Indian lawyer and law professor. Provide concise, accurate information about Indian law (IPC, BNS, CrPC, Constitution, etc.). Always mention relevant section numbers. Keep answers under 200 words. Add a one-line disclaimer at the end.`,
+        messages: [{ role: 'user', content: `Explain Indian law related to: "${q}". Include relevant IPC/BNS sections, punishment, and key legal principles.` }]
+      })
+    });
+    const data = await resp.json();
+    const text = data.content?.map(c => c.text || '').join('') || 'Unable to fetch AI response.';
+    aiDiv.innerHTML = `<div class="ai-label">AI Legal Analysis</div><div class="ai-text">${text.replace(/\n/g,'<br>')}</div>`;
+  } catch(e) {
+    aiDiv.innerHTML = `<div class="ai-label">AI Analysis</div><div class="ai-text">Connect API key to get AI analysis.</div>`;
+  }
+}
+
+// ── Home quick search ─────────────────────────────
+function homeTag(q) { document.getElementById('home-search').value = q; quickSearch(); }
+function quickSearch() {
+  const q = document.getElementById('home-search').value;
+  setTool('ipc');
+  document.getElementById('ipc-search').value = q;
+  searchIPC();
+}
+
+// ── DRAFT GENERATOR ──────────────────────────────
+async function generateDraft() {
+  const type = document.getElementById('doc-type').value;
+  const court = document.getElementById('doc-court').value;
+  const name = document.getElementById('petitioner-name').value || '[Petitioner Name]';
+  const section = document.getElementById('doc-section').value || 'not specified';
+  const facts = document.getElementById('doc-facts').value || 'Facts to be provided';
+  const out = document.getElementById('draft-output');
+  out.innerHTML = '<div class="spinner" style="margin:2rem auto"></div><p style="text-align:center;color:var(--text-muted)">Generating draft...</p>';
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: `You are an expert Indian advocate. Draft formal legal documents in proper Indian legal format. Use "IN THE [COURT]", "IN THE MATTER OF", proper prayer/relief sections. Include [PLACEHOLDER] for fields to fill. Keep format correct for Indian courts.`,
+        messages: [{ role: 'user', content: `Draft a ${type} for ${court}. Petitioner: ${name}. Sections: ${section}. Facts: ${facts}. Use proper Indian legal format with heading, cause title, facts, grounds, prayer.` }]
+      })
+    });
+    const data = await resp.json();
+    const text = data.content?.map(c => c.text || '').join('') || 'Unable to generate draft.';
+    out.textContent = text;
+  } catch(e) {
+    out.textContent = 'Error generating draft. Please check API configuration.';
+  }
+}
+function copyDraft() {
+  navigator.clipboard.writeText(document.getElementById('draft-output').textContent);
+  alert('Draft copied to clipboard!');
+}
+function clearDraft() { document.getElementById('draft-output').textContent = 'Fill the form and click Generate Draft...'; }
+
+// ── AI CHAT ──────────────────────────────────────
+const chatHistory = [];
+async function sendChat() {
+  const input = document.getElementById('chat-input');
+  const msg = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+  addChatMsg(msg, 'user');
+  chatHistory.push({ role: 'user', content: msg });
+  const typingDiv = addChatMsg('...', 'ai', true);
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: `You are NyayAI, an expert Indian legal assistant. You have deep knowledge of IPC, BNS 2023, CrPC, BNSS, Indian Constitution, CPC, Evidence Act, and Indian case law. Provide accurate, helpful legal information. Always: 1) cite specific sections 2) mention key Supreme Court cases if relevant 3) clarify if something is law vs. legal advice 4) be concise but thorough. End with: "⚠ This is general legal information, not legal advice."`,
+        messages: chatHistory
+      })
+    });
+    const data = await resp.json();
+    const text = data.content?.map(c => c.text || '').join('') || 'Unable to get response.';
+    typingDiv.innerHTML = text.replace(/\n/g, '<br>');
+    chatHistory.push({ role: 'assistant', content: text });
+  } catch(e) {
+    typingDiv.innerHTML = 'Connect API to get AI responses. Check configuration.';
+  }
+}
+
+function addChatMsg(text, role, isTemp) {
+  const msgs = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = `chat-msg ${role === 'user' ? 'user' : ''}`;
+  div.innerHTML = `<div class="chat-avatar">${role === 'user' ? '👤' : '⚖'}</div><div class="chat-bubble">${text}</div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  return div.querySelector('.chat-bubble');
+}
+function quickChat(q) { document.getElementById('chat-input').value = q; sendChat(); }
+
+// ── QUIZ DATA ─────────────────────────────────────
+const QUIZ_SETS = {
+  ipc: [
+    { q:"Under IPC, what is the minimum punishment for rape (Section 376)?", opts:["3 years","5 years","7 years","10 years"], ans:2, exp:"Section 376 IPC prescribes minimum 7 years rigorous imprisonment, extendable to life imprisonment and fine." },
+    { q:"Section 302 IPC deals with which offence?", opts:["Attempt to murder","Murder","Culpable homicide not amounting to murder","Dacoity"], ans:1, exp:"IPC Section 302 provides punishment for murder — death or imprisonment for life + fine." },
+    { q:"How many persons are required to constitute dacoity under IPC?", opts:["2 or more","3 or more","4 or more","5 or more"], ans:3, exp:"IPC Section 391 — dacoity requires 5 or more persons committing or attempting robbery together." },
+    { q:"IPC Section 420 relates to:", opts:["Theft","Robbery","Cheating and dishonestly inducing delivery","Forgery"], ans:2, exp:"Section 420 IPC — cheating and dishonestly inducing delivery of property. Punishment: 7 years + fine." },
+    { q:"Under Section 34 IPC, 'common intention' requires:", opts:["Same intention formed before the act","Pre-arranged plan","Prior meeting of minds","All of the above"], ans:2, exp:"Section 34 requires prior meeting of minds — a pre-arranged plan. Mere similar intention is not common intention." },
+    { q:"Section 498A IPC provides punishment for:", opts:["Bigamy","Adultery","Cruelty to wife by husband/relatives","Domestic violence"], ans:2, exp:"IPC 498A: Husband or relative subjecting wife to cruelty (dowry harassment or causing injury) — 3 years + fine." },
+  ],
+  constitution: [
+    { q:"Which Article of the Constitution abolishes Untouchability?", opts:["Article 14","Article 15","Article 17","Article 21"], ans:2, exp:"Article 17 abolishes untouchability and forbids its practice in any form. Enforcement of any disability arising therefrom is an offence." },
+    { q:"The Right to Constitutional Remedies (Article 32) was called 'heart and soul of the Constitution' by:", opts:["Jawaharlal Nehru","B.R. Ambedkar","Sardar Patel","Rajendra Prasad"], ans:1, exp:"Dr. B.R. Ambedkar called Article 32 the 'heart and soul' of the Constitution as it guarantees enforcement of Fundamental Rights." },
+    { q:"Directive Principles of State Policy are contained in which Part of the Constitution?", opts:["Part III","Part IV","Part IVA","Part V"], ans:1, exp:"Part IV (Articles 36-51) contains the Directive Principles of State Policy. They are not justiciable but fundamental in governance." },
+    { q:"The 42nd Constitutional Amendment added which words to the Preamble?", opts:["Democratic Republic","Sovereign Democratic","Socialist, Secular","Justice, Liberty"], ans:2, exp:"The 42nd Amendment (1976) added 'Socialist' and 'Secular' to the Preamble." },
+    { q:"Writ of Habeas Corpus literally means:", opts:["You may have the body","We command","By what authority","Forbid"], ans:0, exp:"Habeas Corpus (Latin: 'you may have the body') — issued to produce a person unlawfully detained before the court." },
+  ],
+  crpc: [
+    { q:"Under CrPC, a bailable offence means:", opts:["Bail is discretionary","Bail is a matter of right","Bail cannot be granted","Bail requires Supreme Court order"], ans:1, exp:"In bailable offences, bail is a matter of right under Section 436 CrPC. The accused cannot be refused bail." },
+    { q:"Section 125 CrPC deals with:", opts:["Search and seizure","Maintenance of wives, children and parents","Arrest without warrant","Cognizance by magistrate"], ans:1, exp:"Section 125 CrPC — Maintenance of wives, children and parents. Secular provision applicable to all religions." },
+    { q:"Anticipatory bail is provided under which section of CrPC?", opts:["Section 437","Section 438","Section 439","Section 440"], ans:1, exp:"Section 438 CrPC — Anticipatory bail. A person apprehending arrest may apply to Sessions Court or High Court for bail in anticipation." },
+    { q:"FIR stands for:", opts:["Final Investigation Report","First Information Report","Formal Inquiry Record","First Inquiry Report"], ans:1, exp:"FIR — First Information Report, recorded under Section 154 CrPC. The first report given to police regarding commission of a cognizable offence." },
+  ],
+  landmark: [
+    { q:"Kesavananda Bharati case (1973) established the doctrine of:", opts:["Judicial Review","Basic Structure","Sovereign Immunity","Due Process"], ans:1, exp:"Kesavananda Bharati v. State of Kerala (1973) — the Basic Structure doctrine. Parliament cannot amend the Constitution to destroy its basic structure." },
+    { q:"In which case did the Supreme Court uphold the right to privacy as a fundamental right?", opts:["Maneka Gandhi v. UOI","K.S. Puttaswamy v. UOI","ADM Jabalpur v. Shivkant Shukla","Vishaka v. State of Rajasthan"], ans:1, exp:"K.S. Puttaswamy v. Union of India (2017) — 9-judge bench unanimously held Right to Privacy is a Fundamental Right under Article 21." },
+    { q:"Vishaka Guidelines (1997) relate to:", opts:["Child labour","Sexual harassment at workplace","Dowry deaths","Environmental protection"], ans:1, exp:"Vishaka v. State of Rajasthan (1997) — SC laid down Vishaka Guidelines for prevention of sexual harassment at workplace, later codified as POSH Act 2013." },
+    { q:"The 'Right to Education' was recognized as a fundamental right in:", opts:["Mohini Jain case","Unni Krishnan case","T.M.A. Pai case","P.A. Inamdar case"], ans:1, exp:"Unni Krishnan v. State of Andhra Pradesh (1993) — SC held right to education flows from right to life under Art. 21. Later enacted as Art. 21A by 86th Amendment." },
+  ],
+  misc: [
+    { q:"The Limitation Act sets a limitation of ___ years for suits relating to immovable property (general):", opts:["3 years","6 years","12 years","30 years"], ans:2, exp:"Article 65 of Limitation Act — 12 years for suits by a defendant to establish title to immovable property." },
+    { q:"Consumer Disputes Redressal Commission at District level can entertain complaints up to:", opts:["₹20 lakh","₹50 lakh","₹1 crore","₹2 crore"], ans:2, exp:"Under Consumer Protection Act 2019, District Commission handles complaints up to ₹1 crore in value." },
+    { q:"POCSO Act provides protection to children up to age:", opts:["14 years","16 years","18 years","21 years"], ans:2, exp:"POCSO Act 2012 — Protection of Children from Sexual Offences. 'Child' means any person below 18 years of age." },
+    { q:"Under which Act can a woman obtain a Protection Order against domestic violence?", opts:["IPC Section 498A","Dowry Prohibition Act","Protection of Women from Domestic Violence Act 2005","Hindu Marriage Act"], ans:2, exp:"The Protection of Women from Domestic Violence Act 2005 provides civil remedies including Protection Orders, Residence Orders, and Monetary Relief." },
+  ]
+};
+
+let quizState = { topic:'ipc', idx:0, score:0, total:0, answered:false };
+
+function loadQuiz(topic, btn) {
+  quizState = { topic, idx:0, score:0, total:0, answered:false };
+  document.querySelectorAll('#quiz-topic-row .tab-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  showQuestion();
+}
+
+function showQuestion() {
+  const qs = QUIZ_SETS[quizState.topic] || [];
+  const container = document.getElementById('quiz-container');
+  if (quizState.idx >= qs.length) {
+    const pct = Math.round((quizState.score / qs.length) * 100);
+    container.innerHTML = `
+      <div class="quiz-score">
+        <div class="quiz-score-num">${quizState.score}/${qs.length}</div>
+        <div class="quiz-score-label">${pct}% — ${pct>=80?'Excellent!':pct>=60?'Good effort!':'Keep practicing!'}</div>
+        <button class="btn-primary" style="margin-top:1.5rem" onclick="loadQuiz('${quizState.topic}')">Retry Quiz</button>
+      </div>`;
+    updateStats(quizState.score, qs.length);
+    return;
+  }
+  const q = qs[quizState.idx];
+  container.innerHTML = `
+    <div style="display:flex;justify-content:space-between;font-size:0.8rem;color:var(--text-muted);margin-bottom:1rem">
+      <span>Question ${quizState.idx+1} of ${qs.length}</span>
+      <span>Score: ${quizState.score}</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" style="width:${(quizState.idx/qs.length)*100}%"></div></div>
+    <div class="quiz-card">
+      <div class="quiz-q">${q.q}</div>
+      <div class="quiz-options">
+        ${q.opts.map((o,i)=>`<button class="quiz-opt" onclick="answerQuiz(${i})">${String.fromCharCode(65+i)}. ${o}</button>`).join('')}
+      </div>
+      <div class="quiz-explanation" id="quiz-exp">${q.exp}</div>
+    </div>`;
+}
+
+function answerQuiz(idx) {
+  if (document.querySelectorAll('.quiz-opt')[0].disabled) return;
+  const qs = QUIZ_SETS[quizState.topic];
+  const q = qs[quizState.idx];
+  document.querySelectorAll('.quiz-opt').forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === q.ans) btn.classList.add('correct');
+    else if (i === idx) btn.classList.add('wrong');
+  });
+  if (idx === q.ans) quizState.score++;
+  document.getElementById('quiz-exp').style.display = 'block';
+  setTimeout(() => { quizState.idx++; showQuestion(); }, 2000);
+}
+
+function updateStats(score, total) {
+  const prev = JSON.parse(localStorage.getItem('nyay-stats') || '{"attempted":0,"correct":0}');
+  prev.attempted += total; prev.correct += score;
+  localStorage.setItem('nyay-stats', JSON.stringify(prev));
+  document.getElementById('stat-attempted').textContent = prev.attempted;
+  const acc = prev.attempted ? Math.round((prev.correct/prev.attempted)*100) : 0;
+  document.getElementById('stat-accuracy').textContent = acc + '%';
+  document.getElementById('progress-attempted').style.width = Math.min(100, prev.attempted) + '%';
+  document.getElementById('progress-accuracy').style.width = acc + '%';
+}
+(function initStats() {
+  const s = JSON.parse(localStorage.getItem('nyay-stats') || '{"attempted":0,"correct":0}');
+  document.getElementById('stat-attempted').textContent = s.attempted;
+  const acc = s.attempted ? Math.round((s.correct/s.attempted)*100) : 0;
+  document.getElementById('stat-accuracy').textContent = s.attempted ? acc + '%' : '—';
+  document.getElementById('progress-attempted').style.width = Math.min(100, s.attempted) + '%';
+  document.getElementById('progress-accuracy').style.width = acc + '%';
+})();
+
+// ── GLOSSARY DATA ──────────────────────────────────
+const GLOSSARY = [
+  { term:"Audi Alteram Partem", latin:"Audi alteram partem", def:"Hear the other side — principle of natural justice requiring both parties be heard.", cat:"latin" },
+  { term:"Res Judicata", latin:"Res judicata", def:"A matter already judged. Prevents re-litigation of matters already decided by a competent court.", cat:"latin" },
+  { term:"Mens Rea", latin:"Mens rea", def:"Guilty mind — the mental element required for a crime. Intent or knowledge to commit the offence.", cat:"criminal" },
+  { term:"Actus Reus", latin:"Actus reus", def:"Guilty act — the physical element of a crime. The voluntary act or omission constituting the crime.", cat:"criminal" },
+  { term:"Habeas Corpus", latin:"Habeas corpus", def:"You may have the body — writ to produce a detained person before court to determine legality of detention.", cat:"constitutional" },
+  { term:"Mandamus", latin:"Mandamus", def:"We command — writ directing a public authority to perform a public duty it has refused to perform.", cat:"constitutional" },
+  { term:"Certiorari", latin:"Certiorari", def:"To be certified — writ to quash order of inferior court/tribunal acting without jurisdiction or against natural justice.", cat:"constitutional" },
+  { term:"Prohibition", latin:"Prohibition", def:"Writ to prevent inferior court from exceeding its jurisdiction in a matter pending before it.", cat:"constitutional" },
+  { term:"Quo Warranto", latin:"Quo warranto", def:"By what authority — writ challenging a person's right to hold a public office.", cat:"constitutional" },
+  { term:"Locus Standi", latin:"Locus standi", def:"Right to bring an action or appear in court. Standing to sue — direct interest in the matter.", cat:"latin" },
+  { term:"Stare Decisis", latin:"Stare decisis", def:"To stand by decisions — doctrine of precedent. Courts should follow prior decisions of higher courts.", cat:"latin" },
+  { term:"Prima Facie", latin:"Prima facie", def:"On the face of it — evidence sufficient to establish a fact unless rebutted.", cat:"latin" },
+  { term:"Cognizable Offence", latin:"", def:"Offence where police can arrest without warrant. Listed in Schedule I of CrPC (e.g., murder, rape).", cat:"criminal" },
+  { term:"Non-Cognizable Offence", latin:"", def:"Offence where police cannot arrest without warrant. Permission of magistrate required to investigate.", cat:"criminal" },
+  { term:"Bailable Offence", latin:"", def:"Offence where bail is a matter of right under Section 436 CrPC. Cannot be refused by police or court.", cat:"criminal" },
+  { term:"Charge Sheet", latin:"", def:"Document filed by police in court under Section 173 CrPC after completion of investigation.", cat:"criminal" },
+  { term:"Interlocutory Order", latin:"", def:"Temporary/interim order passed during pendency of proceedings, not deciding the main case finally.", cat:"civil" },
+  { term:"Caveat", latin:"Caveat", def:"A warning entered in court records to prevent action being taken without notice to the caveator.", cat:"civil" },
+  { term:"Injunction", latin:"", def:"Court order directing a party to do or refrain from doing a specific act. Temporary or permanent.", cat:"civil" },
+  { term:"Plaint", latin:"", def:"Statement of claim filed by plaintiff in a civil suit, as per Order VII CPC, stating facts and relief.", cat:"civil" },
+  { term:"Affidavit", latin:"", def:"Written sworn statement of facts, made voluntarily, confirmed by oath or affirmation before an authority.", cat:"civil" },
+  { term:"Vakalatnama", latin:"", def:"Document authorizing an advocate to appear and plead on behalf of a party in any court proceeding.", cat:"civil" },
+  { term:"Sub Judice", latin:"Sub judice", def:"Under judicial consideration. A matter currently before a court; prevents parallel proceedings.", cat:"latin" },
+  { term:"Amicus Curiae", latin:"Amicus curiae", def:"Friend of the court — person not party to a case who assists the court with information or argument.", cat:"latin" },
+];
+
+let glossaryFilter = 'all';
+function filterGloss(cat, btn) {
+  glossaryFilter = cat;
+  document.querySelectorAll('#tool-glossary .tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderGlossary(cat);
+}
+function searchGlossary() {
+  const q = document.getElementById('gloss-search').value.toLowerCase();
+  const filtered = GLOSSARY.filter(g => (glossaryFilter === 'all' || g.cat === glossaryFilter) && (g.term.toLowerCase().includes(q) || g.def.toLowerCase().includes(q)));
+  document.getElementById('glossary-grid').innerHTML = filtered.map(g => `
+    <div class="gloss-item">
+      <div class="gloss-term">${g.term}</div>
+      ${g.latin ? `<div class="gloss-latin">${g.latin}</div>` : ''}
+      <div class="gloss-def">${g.def}</div>
+    </div>`).join('');
+}
+function renderGlossary(cat) {
+  const filtered = cat === 'all' ? GLOSSARY : GLOSSARY.filter(g => g.cat === cat);
+  document.getElementById('glossary-grid').innerHTML = filtered.map(g => `
+    <div class="gloss-item">
+      <div class="gloss-term">${g.term}</div>
+      ${g.latin ? `<div class="gloss-latin">${g.latin}</div>` : ''}
+      <div class="gloss-def">${g.def}</div>
+    </div>`).join('');
+}
+
+// ── STATUTES ──────────────────────────────────────
+const STATUTES = [
+  { icon:"📜", name:"BNS 2023", full:"Bharatiya Nyaya Sanhita", year:"New: 2023", url:"https://indiacode.nic.in" },
+  { icon:"⚖", name:"IPC 1860", full:"Indian Penal Code", year:"1860 (being replaced)", url:"https://indiacode.nic.in/handle/123456789/2263" },
+  { icon:"🔍", name:"CrPC / BNSS", full:"Code of Criminal Procedure / Bharatiya Nagarik Suraksha Sanhita", year:"2023", url:"https://indiacode.nic.in" },
+  { icon:"📋", name:"CPC 1908", full:"Code of Civil Procedure", year:"1908", url:"https://indiacode.nic.in/handle/123456789/1376" },
+  { icon:"📖", name:"Evidence Act", full:"Indian Evidence Act (BSA 2023)", year:"2023 replaced", url:"https://indiacode.nic.in" },
+  { icon:"🏛", name:"Constitution", full:"Constitution of India", year:"1950", url:"https://legislative.gov.in/constitution-of-india" },
+  { icon:"👨‍👩‍👧", name:"Hindu Marriage Act", full:"Hindu Marriage Act", year:"1955", url:"https://indiacode.nic.in/handle/123456789/1560" },
+  { icon:"💔", name:"Domestic Violence", full:"Protection of Women from Domestic Violence Act", year:"2005", url:"https://indiacode.nic.in/handle/123456789/2074" },
+  { icon:"🛡", name:"POCSO", full:"Protection of Children from Sexual Offences", year:"2012", url:"https://indiacode.nic.in/handle/123456789/2079" },
+  { icon:"🏪", name:"Consumer Protection", full:"Consumer Protection Act", year:"2019", url:"https://indiacode.nic.in/handle/123456789/8730" },
+  { icon:"🏠", name:"RTI Act", full:"Right to Information Act", year:"2005", url:"https://indiacode.nic.in/handle/123456789/2065" },
+  { icon:"⚡", name:"SC/ST Act", full:"SC/ST (Prevention of Atrocities) Act", year:"1989", url:"https://indiacode.nic.in/handle/123456789/1368" },
+];
+function renderStatutes() {
+  document.getElementById('statutes-grid').innerHTML = STATUTES.map(s => `
+    <a class="statute-card" href="${s.url}" target="_blank" rel="noopener">
+      <div class="statute-icon">${s.icon}</div>
+      <div class="statute-name">${s.name}</div>
+      <div class="statute-full">${s.full}</div>
+      <div class="statute-year">${s.year}</div>
+    </a>`).join('');
+}
+</script>
+</body>
+</html>
